@@ -134,7 +134,7 @@ For JSON requests, send `amenities` and `images` as arrays. For uploads, use `mu
 - `POST /api/v1/messages/:id/replies`
 - `PATCH /api/v1/messages/:id/read`
 
-The sender is always taken from the JWT. The receiver is taken from the selected property's owner.
+The sender is always taken from the JWT. The receiver is taken from the selected property's owner. Fetching a message or thread marks messages addressed to the authenticated user as read; viewing another user's messages as an admin does not clear that user's unread state.
 To reply, send `{"message":"Your reply text"}` to `POST /api/v1/messages/:id/replies`, where `:id` is any message in the thread. The original sender and property owner can reply to one another; admins can reply to any thread, and their replies are addressed to the original sender. Retrieve the full conversation with `GET /api/v1/messages/:id/thread`. Admins can browse conversation starters through `GET /api/v1/messages/admin`; each starter's thread endpoint returns its replies as well. Every reply retains the original property and subject.
 
 ## Response Format

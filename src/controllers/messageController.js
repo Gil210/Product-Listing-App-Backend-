@@ -3,7 +3,7 @@ const Message = require('../models/Message');
 const Property = require('../models/Property');
 const asyncHandler = require('../utils/asyncHandler');
 const { success } = require('../utils/apiResponse');
-const { messagePopulation, accessibleMessage } = require('../services/messageService');
+const { messagePopulation, accessibleMessage, markMessagesRead } = require('../services/messageService');
 
 const createMessageRules = [body('property').isMongoId().withMessage('A valid property is required'), body('subject').trim().notEmpty().withMessage('Subject is required'), body('message').trim().notEmpty().withMessage('Message is required')];
 const createMessage = asyncHandler(async (req, res) => {
@@ -17,7 +17,14 @@ const createMessage = asyncHandler(async (req, res) => {
 });
 const sentMessages = asyncHandler(async (req, res) => success(res, 200, 'Sent messages retrieved successfully', await messagePopulation(Message.find({ sender: req.user._id }).sort('-createdAt'))));
 const receivedMessages = asyncHandler(async (req, res) => success(res, 200, 'Received messages retrieved successfully', await messagePopulation(Message.find({ receiver: req.user._id }).sort('-createdAt'))));
-const getMessage = asyncHandler(async (req, res) => success(res, 200, 'Message retrieved successfully', await accessibleMessage(req.params.id, req.user._id)));
+const getMessage = asyncHandler(async (req, res) => {
+  const message = await accessibleMessage(req.params.id, req.user._id);
+  if (String(message.receiver._id) === String(req.user._id)) {
+    await markMessagesRead({ _id: message._id }, req.user._id);
+    message.isRead = true;
+  }
+  success(res, 200, 'Message retrieved successfully', message);
+});
 const markRead = asyncHandler(async (req, res) => { const message = await accessibleMessage(req.params.id, req.user._id); if (String(message.receiver._id) !== String(req.user._id)) throw Object.assign(new Error('Only the receiver can mark a message as read'), { statusCode: 403 }); message.isRead = true; await message.save(); success(res, 200, 'Message marked as read', message); });
 
 const replyRules = [body('message').trim().notEmpty().withMessage('Message is required').isLength({ max: 5000 }).withMessage('Message cannot exceed 5000 characters')];
@@ -31,6 +38,7 @@ const getThread = asyncHandler(async (req, res) => {
   const isParticipant = [root.sender, root.receiver].some((participant) => String(participant) === String(req.user._id));
   if (req.user.role !== 'admin' && !isParticipant) throw Object.assign(new Error('You are not authorized to access this message thread'), { statusCode: 403 });
   const threadQuery = { $or: [{ threadId }, { _id: threadId }] };
+  await markMessagesRead(threadQuery, req.user._id);
   success(res, 200, 'Message thread retrieved successfully', await messagePopulation(Message.find(threadQuery).sort('createdAt')));
 });
 const replyToMessage = asyncHandler(async (req, res) => {

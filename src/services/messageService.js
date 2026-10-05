@@ -8,4 +8,9 @@ const accessibleMessage = async (id, userId) => {
   return message;
 };
 
-module.exports = { messagePopulation, accessibleMessage };
+const markMessagesRead = (query, userId) => Message.updateMany(
+  { ...query, receiver: userId, isRead: false },
+  { $set: { isRead: true } }
+);
+
+module.exports = { messagePopulation, accessibleMessage, markMessagesRead };
