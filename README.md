@@ -48,6 +48,7 @@ The frontend includes public property search and details, login and registration
 ## Swagger UI
 Swagger UI docs can accessed here:
 
+
 `https://product-listing-app-backend-t0cz.onrender.com/api-docs/`
 
 
