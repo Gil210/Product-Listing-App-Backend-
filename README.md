@@ -35,25 +35,20 @@ For production:
 npm start
 ```
 
-The default server URL is `http://localhost:5000`.
+.
 
-## Frontend
+## Frontend & Backend Links
 
-The React/Vite application lives in `frontend/`, separately from the Express API. Start the backend first, then in a second terminal run:
+The  application lives in `https://property-listing-app-frontend-41eh.onrender.com/`, and the backend runs on `https://product-listing-app-backend-t0cz.onrender.com/`
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open [http://localhost:5173](http://localhost:5173). The Vite development server proxies `/api` requests to `http://localhost:5000`. To use a different API URL, copy `frontend/.env.example` to `frontend/.env` and set `VITE_API_URL` to the API base URL (including `/api/v1`). Build the production frontend with `npm run build` from `frontend/`.
+Open the backend link first (If necessary) to check if if it's running before opening the front end to check out the full application on render. 
 
 The frontend includes public property search and details, login and registration, owner property creation/editing/removal, profile and password management, and sent/received messages. API integrations are kept in `frontend/src/api/`; page views and shared components are separated under `frontend/src/pages/` and `frontend/src/components/`.
 
 ## Swagger UI
-
-Start the API, then open [http://localhost:5000/api-docs](http://localhost:5000/api-docs) in your browser. Swagger UI lists all `/api/v1` endpoints and lets you send requests interactively.
+Swagger UI can accessed by creating an account here:
+`https://property-listing-app-frontend-41eh.onrender.com/` and then tapping **My Account** then scrolling to the bottom of the page to locate **API Documentation** inside the account for developers.
+Or alternatively, this is the link for the Swagger Docs `https://product-listing-app-backend-t0cz.onrender.com/api-docs/`
 
 For protected endpoints:
 
