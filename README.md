@@ -48,6 +48,7 @@ The frontend includes public property search and details, login and registration
 ## Swagger UI
 Swagger UI can accessed by creating an account here:
 `https://property-listing-app-frontend-41eh.onrender.com/` and then tapping **My Account** then scrolling to the bottom of the page to locate **API Documentation** inside the account for developers.
+
 Or alternatively, this is the link for the Swagger Docs `https://product-listing-app-backend-t0cz.onrender.com/api-docs/`
 
 For protected endpoints:
