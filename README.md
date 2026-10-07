@@ -52,7 +52,7 @@ Swagger UI docs can accessed here:
 `https://product-listing-app-backend-t0cz.onrender.com/api-docs/`
 
 
-Or alternatively, Swagger Docs: can be accessed by creating an account here:
+Or alternatively, Swagger Docs can be accessed by creating an account here:
  `https://property-listing-app-frontend-41eh.onrender.com/` 
  
  and then tapping **My Account** then scrolling to the bottom of the page to locate **API Documentation** inside the account for developers.
