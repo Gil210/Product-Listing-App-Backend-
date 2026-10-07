@@ -46,12 +46,18 @@ Open the backend link first (If necessary) to check if if it's running before op
 The frontend includes public property search and details, login and registration, owner property creation/editing/removal, profile and password management, and sent/received messages. API integrations are kept in `frontend/src/api/`; page views and shared components are separated under `frontend/src/pages/` and `frontend/src/components/`.
 
 ## Swagger UI
-Swagger UI can accessed by creating an account here:
-`https://property-listing-app-frontend-41eh.onrender.com/` and then tapping **My Account** then scrolling to the bottom of the page to locate **API Documentation** inside the account for developers.
-
-Or alternatively, this is the link for the Swagger Docs:
+Swagger UI docs can accessed here:
 
 `https://product-listing-app-backend-t0cz.onrender.com/api-docs/`
+
+
+Or alternatively, Swagger Docs: can be accessed by creating an account here:
+ `https://property-listing-app-frontend-41eh.onrender.com/` 
+ 
+ and then tapping **My Account** then scrolling to the bottom of the page to locate **API Documentation** inside the account for developers.
+
+
+
 
 For protected endpoints:
 
