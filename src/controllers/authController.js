@@ -3,6 +3,7 @@ const User = require('../models/User');
 const sendMail = require('../utils/sendMail');
 const asyncHandler = require('../utils/asyncHandler');
 const { success } = require('../utils/apiResponse');
+const generateToken = require('../utils/generateToken');
 
 // Validation Rules
 const registerRules = [
@@ -83,7 +84,7 @@ const login = async (req, res) => {
     }
 
     // Generate JWT token
-    const token = user.getSignedJwtToken();
+    const token = generateToken(user._id);
 
     return res.status(200).json({
       success: true,
