@@ -27,4 +27,6 @@ const getUser = asyncHandler(async (req, res) => {
 });
 const deleteUser = asyncHandler(async (req, res) => { const user = await User.findByIdAndDelete(req.params.id); if (!user) throw Object.assign(new Error('User not found'), { statusCode: 404 }); success(res, 200, 'User deleted successfully'); });
 const updateUserStatus = asyncHandler(async (req, res) => { const user = await User.findByIdAndUpdate(req.params.id, { isActive: Boolean(req.body.isActive) }, { new: true }).select('-password'); if (!user) throw Object.assign(new Error('User not found'), { statusCode: 404 }); success(res, 200, 'User status updated successfully', user); });
-module.exports = { getProfile, updateProfile, changePassword, listUsers, getUser, deleteUser, updateUserStatus};
+
+
+module.exports = { getProfile, updateProfile, changePassword, listUsers, getUser, deleteUser, updateUserStatus,};
