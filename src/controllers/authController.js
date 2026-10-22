@@ -1,5 +1,4 @@
 const { body } = require('express-validator');
-const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const sendMail = require('../utils/sendMail');
 const asyncHandler = require('../utils/asyncHandler');
@@ -20,16 +19,12 @@ const loginRules = [
 // Register User + Send OTP
 const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, phone, role } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'Email already registered' });
     }
-
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
 
     // Generate 6-digit OTP & 7-minute expiration
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -38,7 +33,8 @@ const register = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password,
+      phone,
       role: role || 'user',
       otp,
       otpExpiresAt,
@@ -74,7 +70,7 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).select('+password');
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
