@@ -1,25 +1,20 @@
-// For requiring otp for email verification
-const nodemail = require('nodemailer');
+const { Resend } = require('resend');
 
-const sendMail = async (options) => {
-    const transporter = nodemail.createTransport({
-        host: 'smtp.resend.com',
-        port: 465,
-        secure: true, //true for 465, false for other ports
-        auth:{
-            user: 'resend', //Email address
-            pass: process.env.SMTP_PASSWORD //Email password
-        }
+const resend = new Resend(process.env.SMTP_PASSWORD); // Your re_ API key
+
+const sendEmail = async (options) => {
+  try {
+    const data = await resend.emails.send({
+      from: `${process.env.FROM_NAME || 'Haven'} <onboarding@resend.dev>`,
+      to: options.email,
+      subject: options.subject,
+      html: options.html || options.message,
     });
-
-    const mailOptions = {
-        from: `${process.env.FROM_NAME || 'Haven'} <onboarding@resend.dev>`,
-        to: options.email,
-        subject: options.subject,
-        html: options.html || options.message
-    };
-
-    await transporter.sendMail(mailOptions);
+    return data;
+  } catch (error) {
+    console.error('Resend API Error:', error);
+    throw error;
+  }
 };
 
-module.exports = sendMail;
+module.exports = sendEmail;
