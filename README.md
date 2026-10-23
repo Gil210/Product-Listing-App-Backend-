@@ -88,7 +88,6 @@ Registration accepts `user` or `owner`; clients cannot register as `admin`.
 ### Auth
 
 - `POST /api/v1/auth/register`
-- `POST /api/v1/auth/verify-otp`
 - `POST /api/v1/auth/login`
 - `GET /api/v1/auth/me` (Bearer token)
 
@@ -104,7 +103,7 @@ Example registration:
 }
 ```
 
-Registration sends an email verification code that expires after seven minutes. Submit the email and six-digit code to `/api/v1/auth/verify-otp` before logging in.
+Registration is immediate. Sign in with the registered email and password; no email verification code is required.
 
 ### Users
 

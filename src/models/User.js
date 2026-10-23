@@ -9,9 +9,6 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['user', 'owner', 'admin'], default: 'user' },
   profileImage: String,
   isActive: { type: Boolean, default: true },
-  isVerified: { type: Boolean, default: false },
-  otp: { type: String},
-  otpExpiresAt: { type: Date },
 }, { timestamps: true });
 
 userSchema.pre('save', async function hashPassword(next) {

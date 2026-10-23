@@ -54,15 +54,33 @@ module.exports = {
       Property: property,
       ApiSuccess: successResponse,
       RegisterRequest: { type: 'object', required: ['name', 'email', 'password'], properties: { name: { type: 'string', example: 'John Doe' }, email: { type: 'string', format: 'email' }, password: { type: 'string', format: 'password', example: 'Password123' }, phone: { type: 'string' }, role: { type: 'string', enum: ['user', 'owner'], default: 'user' } } },
-      VerifyOTPRequest: { type: 'object', required: ['email', 'otp'], properties: { email: { type: 'string', format: 'email' }, otp: { type: 'string', pattern: '^[0-9]{6}$', example: '123456' } } },
       LoginRequest: { type: 'object', required: ['email', 'password'], properties: { email: { type: 'string', format: 'email' }, password: { type: 'string', format: 'password' } } },
       MessageRequest: { type: 'object', required: ['property', 'subject', 'message'], properties: { property: id, subject: { type: 'string', example: 'Interested in this property' }, message: { type: 'string', example: 'I would like to schedule a viewing.' } } }
     }
   },
   paths: {
-    '/api/v1/auth/register': { post: { tags: ['Auth'], summary: 'Register a user or owner and send a verification OTP', requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/RegisterRequest' } } } }, responses: { 201: response('#/components/schemas/ApiSuccess', 'Registration successful; verification code sent by email'), 400: { description: 'Validation error or email already registered' } } } },
-    '/api/v1/auth/login': { post: { tags: ['Auth'], summary: 'Login and receive a JWT', requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/LoginRequest' } } } }, responses: { 200: response('#/components/schemas/ApiSuccess', 'Login successful'), 401: { description: 'Invalid credentials' }, 403: { description: 'Email must be verified before signing in' } } } },
-    '/api/v1/auth/verify-otp': { post: { tags: ['Auth'], summary: 'Verify a registration email with its OTP', description: 'Submit the six-digit code sent during registration. Codes expire after seven minutes.', requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/VerifyOTPRequest' } } } }, responses: { 200: response('#/components/schemas/ApiSuccess', 'Email verified successfully'), 400: { description: 'Invalid, expired, or already-used OTP' }, 404: { description: 'User not found' } } } },
+    '/api/v1/auth/register': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Register a user or owner',
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/RegisterRequest' } } } },
+        responses: {
+          201: response('#/components/schemas/ApiSuccess', 'Registration successful; the user can sign in immediately'),
+          400: { description: 'Validation error or email already registered' }
+        }
+      }
+    },
+    '/api/v1/auth/login': {
+      post: {
+        tags: ['Auth'],
+        summary: 'Login with an email and password to receive a JWT',
+        requestBody: { required: true, content: { 'application/json': { schema: { $ref: '#/components/schemas/LoginRequest' } } } },
+        responses: {
+          200: response('#/components/schemas/ApiSuccess', 'Login successful'),
+          401: { description: 'Invalid email or password' }
+        }
+      }
+    },
     '/api/v1/auth/me': { get: { tags: ['Auth'], summary: 'Get the authenticated user', security: [auth], responses: { 200: response('#/components/schemas/ApiSuccess', 'Current user'), ...protectedResponses } } },
     '/api/v1/users/profile': { get: { tags: ['Users'], summary: 'Get own profile', security: [auth], responses: { 200: response('#/components/schemas/ApiSuccess', 'Profile') } }, put: { tags: ['Users'], summary: 'Update own profile', security: [auth], requestBody: { content: { 'application/json': { schema: { type: 'object', properties: { name: { type: 'string' }, phone: { type: 'string' }, profileImage: { type: 'string', format: 'uri' } } } } } }, responses: { 200: response('#/components/schemas/ApiSuccess', 'Profile updated') } } },
     '/api/v1/users/change-password': { put: { tags: ['Users'], summary: 'Change password', security: [auth], requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['currentPassword', 'newPassword'], properties: { currentPassword: { type: 'string', format: 'password' }, newPassword: { type: 'string', format: 'password', minLength: 8 } } } } } }, responses: { 200: { description: 'Password changed' }, ...protectedResponses } } },
